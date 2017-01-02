@@ -1,0 +1,12 @@
+diff -rupN olefile-0.43/setup.py olefile-0.43-new/setup.py
+--- olefile-0.43/setup.py	2016-01-29 10:24:20.000000000 +0100
++++ olefile-0.43-new/setup.py	2017-01-02 17:19:56.757160114 +0100
+@@ -259,7 +259,7 @@ def main():
+         license=license,
+ ##        package_dir=package_dir,
+         packages=packages,
+-        package_data = package_data,
++#        package_data = package_data,
+         py_modules = modules,
+         download_url=download_url,
+ #        data_files=data_files,
