@@ -1,3 +1,7 @@
+%if 0%{?fedora}
+%global with_python3 1
+%endif
+
 %global srcname olefile
 %global _description \
 olefile is a Python package to parse, read and write Microsoft OLE2 files\
@@ -28,6 +32,7 @@ BuildArch:      noarch
 Summary:        %{summary}
 BuildRequires:  python2-devel
 BuildRequires:  python2-sphinx
+BuildRequires:  python-sphinx_rtd_theme
 %{?python_provide:%python_provide python2-%{srcname}}
 
 %description -n python2-%{srcname} %{_description}
@@ -35,6 +40,7 @@ BuildRequires:  python2-sphinx
 Python2 version.
 
 
+%if 0%{?with_python3}
 %package -n python3-%{srcname}
 Summary:        %{summary}
 BuildRequires:  python3-devel
@@ -44,6 +50,7 @@ BuildRequires:  python3-sphinx
 %description -n python3-%{srcname} %{_description}
 
 Python3 version.
+%endif
 
 
 %prep
@@ -52,15 +59,24 @@ Python3 version.
 
 %build
 %py2_build
+## FIXME: Fix doc build on EL7
+%if 0%{?rhel}
+make -C doc html BUILDDIR=_build_py2
+%else
 make -C doc html BUILDDIR=_build_py2 SPHINXBUILD=sphinx-build-%python2_version
+%endif
 
+%if 0%{?with_python3}
 %py3_build
 make -C doc html BUILDDIR=_build_py3 SPHINXBUILD=sphinx-build-%python3_version
+%endif
 
 
 %install
 %py2_install
+%if 0%{?with_python3}
 %py3_install
+%endif
 
 
 %check
@@ -77,6 +93,8 @@ make -C doc html BUILDDIR=_build_py3 SPHINXBUILD=sphinx-build-%python3_version
 %{python2_sitelib}/olefile-*.egg-info
 %{python2_sitelib}/olefile/
 
+
+%if 0%{?with_python3}
 %files -n python3-%{srcname}
 %doc README.md doc/_build_py3/html
 %license doc/License.rst
@@ -84,6 +102,7 @@ make -C doc html BUILDDIR=_build_py3 SPHINXBUILD=sphinx-build-%python3_version
 %{python3_sitelib}/__pycache__/OleFileIO_PL.*
 %{python3_sitelib}/olefile-*.egg-info
 %{python3_sitelib}/olefile/
+%endif
 
 
 %changelog
